@@ -1,4 +1,4 @@
-FROM pretix/standalone:latest
+FROM pretix/standalone:2023.7
 USER root
 # ZUGFeRD is a German standard allowing to embed structured data in PDF>
 RUN pip3 install pretix-zugferd
