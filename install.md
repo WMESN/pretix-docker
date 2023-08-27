@@ -1,7 +1,8 @@
 ## Install Pretix
 ``` bash
 cd /opt/esn_germany_docker/pretix
-# Fill .env File, and pretix.cfg
+# Fill .env File
+# Fill and rename example.pretix.cfg to pretix.cfg
 
 mkdir -p pretix
 mkdir -p db
