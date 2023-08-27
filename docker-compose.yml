@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  pretix:
+    build: .
+    container_name: pretix
+    restart: unless-stopped
+    command: all
+    env_file: .env
+    volumes:
+      - ./pretix:/data
+      - ./pretix.cfg:/etc/pretix/pretix.cfg:ro
+    depends_on:
+      - db
+      - cache
+    networks:
+      - pretix_net
+      - proxy_net
+
+  db:
+    image: postgres:14-alpine
+    container_name: pretix_db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - pretix_net
+
+networks:
+  pretix_net:
+  proxy_net:
+    external: true
+
+
