@@ -18,7 +18,5 @@ RUN pip3 install pretix-bitpay
 RUN pip3 install pretix-bounces
 # Third party: Authentication backend for CAS SSO servers
 RUN pip3 install pretix-cas
-RUN mkdir -p /db
-RUN chown pretixuser /db
 USER pretixuser
 RUN cd /pretix/src && make production
