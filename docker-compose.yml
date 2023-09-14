@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3.5'
 
 services:
@@ -33,3 +34,75 @@ networks:
     external: true
 
 
+=======
+version: '3'
+services:
+  mysql:
+    container_name: presta-mysql
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: prestashop
+    secrets:
+      - db_root_password
+    networks:
+      - prestashop_network
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./config-files/mysql/mysql.cnf/:/etc/mysql/conf.d/custom.cnf
+    expose:
+      - "3306"
+  prestashop:
+    container_name: prestashop
+    image: prestashop/prestashop:8.1.1-8.0-fpm
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - 3307:3306
+    environment:
+      DB_SERVER: presta-mysql
+      DB_NAME: prestashop
+      DB_USER: root
+      DB_PASSWD: admin
+      PS_DOMAIN: localhost:8002
+    secrets:
+      - db_root_password
+    networks:
+      - prestashop_network
+    volumes:
+#      - type: bind
+#        source: ./modules/testModule # local path to the module
+#        target: /var/www/html/modules/testModule # path to be mounted in the container
+#      - type: bind
+#        source: ./themes/myTheme # local path to the theme
+#        target:  /var/www/html/themes/myTheme # path to be mounted in the container
+      - psdata:/var/www/html
+      - ./config-files/php/php.ini:/usr/local/etc/php/php.ini
+#      - ./config-files/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+
+  apache:
+    image: "httpd:2.4.43-alpine"
+    ports:
+      - "8002:80"
+      - "443"
+    depends_on:
+      - prestashop
+    volumes:
+      - psdata:/var/www/html
+      - ./logs/apache2/:/var/log/apache2/
+      - ./config-files/apache2/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    networks:
+      - prestashop_network
+
+secrets:
+  db_root_password:
+    file: db_root_password.txt
+
+networks:
+  prestashop_network:
+volumes:
+  psdata:
+  dbdata:
+>>>>>>> ec350b2 (Add files via upload)
